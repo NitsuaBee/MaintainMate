@@ -1,0 +1,42 @@
+package com.example.loginsystem
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    // Simulating some user data (hardcoded)
+    private val users = mapOf("user1" to "password1", "admin" to "adminpass")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Get references to the views
+        val usernameEditText = findViewById<EditText>(R.id.username)
+        val passwordEditText = findViewById<EditText>(R.id.password)
+        val loginButton = findViewById<Button>(R.id.loginButton)
+        val guestButton = findViewById<Button>(R.id.guestButton)
+        val messageTextView = findViewById<TextView>(R.id.messageTextView)
+
+        // Set up the login button click listener
+        loginButton.setOnClickListener {
+            val username = usernameEditText.text.toString()
+            val password = passwordEditText.text.toString()
+
+            if (users[username] == password) {
+                messageTextView.text = "Login successful. Welcome, $username!"
+            } else {
+                messageTextView.text = "Invalid username or password."
+            }
+        }
+
+        // Set up the guest login button click listener
+        guestButton.setOnClickListener {
+            messageTextView.text = "Welcome, Guest! Limited access granted."
+        }
+    }
+}

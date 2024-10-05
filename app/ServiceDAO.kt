@@ -1,0 +1,24 @@
+package com.example.maintainmate2.database
+
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.example.maintainmate2.models.Service
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface ServiceDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertService(service: Service)
+
+    @Update
+    suspend fun updateService(service: Service)
+
+    @Delete
+    suspend fun deleteService(service: Service)
+
+    @Query("SELECT * FROM services WHERE id = :id")
+    fun getService(id: Int): Flow<Service>
+
+    @Query("SELECT * FROM services WHERE vehicle_id = :vehicleId ORDER BY service_date DESC")
+    fun getAllServicesByVehicle(vehicleId: Int): LiveData<List<Service>>
+}

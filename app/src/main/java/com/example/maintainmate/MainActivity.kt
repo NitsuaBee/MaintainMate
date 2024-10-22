@@ -1,47 +1,29 @@
 package com.example.maintainmate
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.maintainmate.ui.theme.MaintainMateTheme
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MaintainMateTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+        setContentView(R.layout.activity_main)
+
+        val buttonOpenAddVehicle = findViewById<Button>(R.id.buttonOpenAddVehicle)
+        val buttonViewVehicles = findViewById<Button>(R.id.buttonViewVehicles)
+
+        // Navigate to AddVehicleActivity when the button is clicked
+        buttonOpenAddVehicle.setOnClickListener {
+            val intent = Intent(this, AddVehicleActivity::class.java)
+            startActivity(intent)
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MaintainMateTheme {
-        Greeting("Android")
+        // Navigate to ViewVehiclesActivity when the button is clicked
+        buttonViewVehicles.setOnClickListener {
+            val intent = Intent(this, ViewVehiclesActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

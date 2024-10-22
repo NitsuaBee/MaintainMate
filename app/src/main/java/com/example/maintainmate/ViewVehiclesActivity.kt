@@ -2,7 +2,7 @@ package com.example.maintainmate
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 class ViewVehiclesActivity : AppCompatActivity() {
 
     companion object {
-        const val TAG = "ViewVehiclesActivity" // Tag for loggingi the vehicle
+        const val TAG = "ViewVehiclesActivity" // Tag for logging
     }
+
+    private lateinit var vehicleAdapter: VehicleAdapter // Declare vehicleAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,57 +23,40 @@ class ViewVehiclesActivity : AppCompatActivity() {
 
         val noVehiclesText = findViewById<TextView>(R.id.noVehiclesText)
         val vehicleListView = findViewById<ListView>(R.id.vehicleListView)
+        val backButton = findViewById<Button>(R.id.backButton)
 
-        //Log vehicle list status
-        Log.d(TAG, "onCreate: Checking if vehicle list is empty")
+        // Set up back button click listener
+        backButton.setOnClickListener {
+            Log.d(TAG, "Back button clicked")
+            finish() // Close the current activity and return to the previous one
+        }
 
+        // Initialize the adapter for the ListView
+        vehicleAdapter = VehicleAdapter(this, AddVehicleActivity.vehicleList)
+        vehicleListView.adapter = vehicleAdapter
+
+        // Check if the vehicle list is empty
         if (AddVehicleActivity.vehicleList.isNotEmpty()) {
             noVehiclesText.visibility = TextView.GONE
-            Log.d(TAG, "onCreate: Vehicle list contains ${AddVehicleActivity.vehicleList.size} items")
-
-            // Set up the adapter with vehicle list
-            val vehicleAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                AddVehicleActivity.vehicleList.map { vehicle ->
-                    "${vehicle.brand} ${vehicle.model} (${vehicle.year}), VIN: ${vehicle.vin ?: "Not Provided"}"
-                }
-            )
-
-            vehicleListView.adapter = vehicleAdapter
-            Log.d(TAG, "onCreate: Adapter set with vehicle list")
-
         } else {
-            // Log if vehicle list is empty
-            Log.d(TAG, "onCreate: No vehicles available")
             noVehiclesText.visibility = TextView.VISIBLE
         }
     }
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume: Refreshing vehicle list")
 
-        Log.d(TAG, "onResume: Checking vehicle list in onResume")
+        // Refresh the vehicle list in onResume
+        vehicleAdapter.notifyDataSetChanged()
 
         val noVehiclesText = findViewById<TextView>(R.id.noVehiclesText)
-        val vehicleListView = findViewById<ListView>(R.id.vehicleListView)
 
+        // Check if the vehicle list is empty after editing
         if (AddVehicleActivity.vehicleList.isNotEmpty()) {
             noVehiclesText.visibility = TextView.GONE
-
-            val vehicleAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                AddVehicleActivity.vehicleList.map { vehicle ->
-                    "${vehicle.brand} ${vehicle.model} (${vehicle.year}), VIN: ${vehicle.vin ?: "Not Provided"}"
-                }
-            )
-
-            vehicleListView.adapter = vehicleAdapter
-            Log.d(TAG, "onResume: Adapter refreshed with updated vehicle list")
         } else {
             noVehiclesText.visibility = TextView.VISIBLE
-            Log.d(TAG, "onResume: No vehicles available to display")
         }
     }
 }

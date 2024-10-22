@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MaintainMate</string>
     <string name="no_vehicles">No vehicles available</string>
+    <string name="add_vehicle">Add Vehicle</string>
 </resources>

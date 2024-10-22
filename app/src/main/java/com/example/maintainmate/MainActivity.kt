@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         val buttonOpenAddVehicle = findViewById<Button>(R.id.buttonOpenAddVehicle)
         val buttonViewVehicles = findViewById<Button>(R.id.buttonViewVehicles)
 

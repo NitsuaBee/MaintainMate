@@ -17,18 +17,30 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Add Vehicle Button -->
+    <!-- Add Vehicle Button with Icon -->
+    <ImageButton
+        android:id="@+id/buttonAddVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/car_repair"
+        android:contentDescription="@string/add_vehicle"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toBottomOf="@id/exampleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- View Vehicles Button -->
     <Button
         android:id="@+id/buttonOpenAddVehicle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Vehicle"
-        app:layout_constraintTop_toBottomOf="@id/exampleText"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- View Vehicles Button -->
     <Button
         android:id="@+id/buttonViewVehicles"
         android:layout_width="wrap_content"
@@ -38,5 +50,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "964631197575",
+    "project_id": "maintainmate-651ce",
+    "storage_bucket": "maintainmate-651ce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964631197575:android:736e96b2a79ef6501f8522",
+        "android_client_info": {
+          "package_name": "com.example.maintainmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYjO1QNiXxkMfmg1KehF2IytVUqRNaapU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

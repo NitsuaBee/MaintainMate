@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:allowBackup="true"
@@ -15,32 +16,31 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/maintain_mate_icon"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/maintain_mate_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaintainMate"
-        tools:targetApi="31"
-        android:requestLegacyExternalStorage="true">
+        tools:targetApi="31">
+
+        <!-- Activities -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MaintainMate">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".MaintenanceActivity" />
         <activity android:name=".AddVehicleActivity" />
         <activity android:name=".ViewVehiclesActivity" />
-        <activity android:name=".RegisterActivity"/>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".MaintenanceDetailsActivity" />
 
-
-
-
+        <!-- Receiver -->
+        <receiver android:name=".ReminderReceiver" />
     </application>
-
 </manifest>

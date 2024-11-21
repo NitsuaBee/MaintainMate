@@ -1,19 +1,14 @@
 package com.example.maintainmate
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ViewVehiclesActivity : AppCompatActivity() {
-
-    companion object {
-        const val TAG = "ViewVehiclesActivity"
-    }
+class MaintenanceActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -22,24 +17,23 @@ class ViewVehiclesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_vehicles)
+        setContentView(R.layout.activity_maintenance)
 
         // Initialize Firebase
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
         // Set up RecyclerView
-        recyclerView = findViewById(R.id.recyclerViewVehicles)
+        recyclerView = findViewById(R.id.maintenanceRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Initialize VehicleAdapter for View Vehicles (not maintenance mode)
-        vehicleAdapter = VehicleAdapter(this, mutableListOf(), isMaintenanceMode = false) { vehicle ->
-            // You can implement any action when a vehicle is clicked
-            Log.d(TAG, "Clicked on: ${vehicle.brand} ${vehicle.model}")
+        // Initialize adapter
+        vehicleAdapter = VehicleAdapter(this, mutableListOf(), isMaintenanceMode = true) { vehicle ->
+            navigateToMaintenanceDetails(vehicle)
         }
         recyclerView.adapter = vehicleAdapter
 
-        // Fetch vehicles from Firestore
+        // Fetch vehicles
         fetchVehicles()
     }
 
@@ -60,9 +54,15 @@ class ViewVehiclesActivity : AppCompatActivity() {
                 }
                 vehicleAdapter.updateData(vehicles)
             }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Error fetching vehicles", e)
-                Toast.makeText(this, "Error fetching vehicles", Toast.LENGTH_SHORT).show()
-            }
+    }
+
+    private fun navigateToMaintenanceDetails(vehicle: Vehicle) {
+        val intent = Intent(this, MaintenanceDetailsActivity::class.java).apply {
+            putExtra("VEHICLE_BRAND", vehicle.brand)
+            putExtra("VEHICLE_MODEL", vehicle.model)
+            putExtra("VEHICLE_YEAR", vehicle.year)
+            putExtra("VEHICLE_MILEAGE", vehicle.mileage)
+        }
+        startActivity(intent)
     }
 }

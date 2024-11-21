@@ -3,4 +3,5 @@
     <string name="no_vehicles">No vehicles available</string>
     <string name="add_vehicle">Add Vehicle</string>
     <string name="default_web_client_id">964631197575-psajo2i9ggt1b1k96p0ar8gcmqbr8uei.apps.googleusercontent.com</string>
+    <string name="maintenance">Maintenance Information</string>
 </resources>

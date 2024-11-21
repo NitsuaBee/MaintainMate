@@ -1,0 +1,47 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/maintenanceTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Maintenance Information"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:paddingBottom="12dp"
+            android:gravity="center" />
+
+        <!-- Maintenance Details -->
+        <TextView
+            android:id="@+id/maintenanceDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fetching maintenance information..."
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:lineSpacingExtra="8dp"
+            android:padding="4dp"
+            android:background="@drawable/details_background"
+            android:paddingHorizontal="12dp" />
+        <Button
+            android:id="@+id/setReminderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Reminder"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+</ScrollView>

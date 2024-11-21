@@ -7,49 +7,41 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- App Icon -->
     <ImageView
         android:id="@+id/appIcon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/maintain_mate_icon"
-        android:layout_gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp" />
 
-    <!-- Example TextView -->
+    <!-- Welcome Message -->
     <TextView
-        android:id="@+id/exampleText"
+        android:id="@+id/welcomeMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello, MaintainMate!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Add Vehicle Button with Icon -->
-    <ImageButton
-        android:id="@+id/buttonAddVehicle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/car_repair"
-        android:contentDescription="@string/add_vehicle"
-        android:layout_marginTop="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintTop_toBottomOf="@id/exampleText"
+        android:text="Welcome to MaintainMate!"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/appIcon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
-    <!-- View Vehicles Button -->
+    <!-- Add Vehicle Button -->
     <Button
         android:id="@+id/buttonOpenAddVehicle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Vehicle"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcomeMessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
+    <!-- View Stored Vehicles Button -->
     <Button
         android:id="@+id/buttonViewVehicles"
         android:layout_width="wrap_content"
@@ -59,8 +51,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
-
-
+    <!-- Maintenance Information Button -->
+    <Button
+        android:id="@+id/buttonMaintenance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Maintenance Information"
+        app:layout_constraintTop_toBottomOf="@id/buttonViewVehicles"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+    <Button
+        android:id="@+id/viewRemindersButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Reminders"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

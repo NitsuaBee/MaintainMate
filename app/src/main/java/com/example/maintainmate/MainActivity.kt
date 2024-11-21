@@ -17,37 +17,47 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize Firebase Auth and Firestore
+        // Initialize Firebase services
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+        // Check if the user is logged in
         val currentUser = auth.currentUser
         if (currentUser == null) {
-            // Redirect to LoginActivity if user is not signed in
             redirectToLogin()
             return
         }
 
         val userId = currentUser.uid
-
-        // Log app launch event for the user
         logUserData(userId, "app_launched")
 
-        // Initialize buttons
+        // Initialize buttons for navigation
         val buttonOpenAddVehicle = findViewById<Button>(R.id.buttonOpenAddVehicle)
         val buttonViewVehicles = findViewById<Button>(R.id.buttonViewVehicles)
 
-        // Navigate to AddVehicleActivity and log event
         buttonOpenAddVehicle.setOnClickListener {
             logUserData(userId, "navigate_add_vehicle")
             navigateToAddVehicle()
         }
 
-        // Navigate to ViewVehiclesActivity and log event
         buttonViewVehicles.setOnClickListener {
             logUserData(userId, "navigate_view_vehicles")
             navigateToViewVehicles()
         }
+
+        val buttonMaintenance = findViewById<Button>(R.id.buttonMaintenance)
+        buttonMaintenance.setOnClickListener {
+            val intent = Intent(this, MaintenanceActivity::class.java)
+            startActivity(intent)
+        }
+
+        val viewRemindersButton = findViewById<Button>(R.id.viewRemindersButton)
+        viewRemindersButton.setOnClickListener {
+            val intent = Intent(this, RemindersActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     private fun logUserData(userId: String, eventType: String) {
@@ -56,9 +66,7 @@ class MainActivity : AppCompatActivity() {
             "timestamp" to System.currentTimeMillis()
         )
 
-        db.collection("Users")
-            .document(userId)
-            .collection("events")
+        db.collection("Users").document(userId).collection("events")
             .add(eventData)
             .addOnSuccessListener {
                 Log.d("Firestore", "Event logged successfully: $eventType")

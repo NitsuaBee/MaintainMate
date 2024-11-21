@@ -1,89 +1,77 @@
 package com.example.maintainmate
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.recyclerview.widget.RecyclerView
 
-class VehicleAdapter(private val context: Context, private val vehicles: MutableList<Vehicle>) : BaseAdapter() {
+class VehicleAdapter(
+    private val context: Context,
+    private val vehicles: MutableList<Vehicle>,
+    private val isMaintenanceMode: Boolean, // Determines button configuration
+    private val onMaintenanceClicked: (Vehicle) -> Unit
+) : RecyclerView.Adapter<VehicleAdapter.VehicleViewHolder>() {
 
-    private val auth = FirebaseAuth.getInstance()
-    private val firestore = FirebaseFirestore.getInstance()
-    private val userId = auth.currentUser?.uid
+    inner class VehicleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val vehicleInfo: TextView = itemView.findViewById(R.id.vehicleInfo)
+        private val maintenanceButton: Button = itemView.findViewById(R.id.maintenanceButton)
+        private val editButton: Button = itemView.findViewById(R.id.editButton)
+        private val deleteButton: Button = itemView.findViewById(R.id.deleteButton)
 
-    override fun getCount(): Int = vehicles.size
+        fun bind(vehicle: Vehicle) {
+            vehicleInfo.text = "${vehicle.brand} ${vehicle.model} (${vehicle.year}), Mileage: ${vehicle.mileage} miles"
 
-    override fun getItem(position: Int): Any = vehicles[position]
+            // Configure buttons based on mode
+            if (isMaintenanceMode) {
+                maintenanceButton.visibility = View.VISIBLE
+                editButton.visibility = View.GONE
+                deleteButton.visibility = View.GONE
 
-    override fun getItemId(position: Int): Long = position.toLong()
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val vehicle = vehicles[position]
-        val rowView = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item_vehicle, parent, false)
-
-        // Vehicle Information
-        val vehicleInfo = rowView.findViewById<TextView>(R.id.vehicleInfo)
-        vehicleInfo.text = "${vehicle.brand} ${vehicle.model} (${vehicle.year}), VIN: ${vehicle.vin ?: "Not Provided"}"
-
-        // Edit Button
-        val editButton = rowView.findViewById<Button>(R.id.editButton)
-        editButton.setOnClickListener {
-            val vehicle = vehicles[position]
-            val intent = Intent(context, AddVehicleActivity::class.java)
-            intent.putExtra("VEHICLE_DOC_ID", vehicle.id)
-            intent.putExtra("BRAND", vehicle.brand)
-            intent.putExtra("MODEL", vehicle.model)
-            intent.putExtra("YEAR", vehicle.year)
-            intent.putExtra("VIN", vehicle.vin)
-            context.startActivity(intent)
-        }
-
-
-
-        // Delete Button
-        val deleteButton = rowView.findViewById<Button>(R.id.deleteButton)
-        deleteButton.setOnClickListener {
-            AlertDialog.Builder(context)
-                .setTitle("Delete Vehicle")
-                .setMessage("Are you sure you want to delete this vehicle?")
-                .setPositiveButton("Yes") { _, _ ->
-                    val userId = FirebaseAuth.getInstance().currentUser?.uid
-
-                    if (userId != null) {
-                        val vehicleToDelete = vehicles[position]
-
-                        FirebaseFirestore.getInstance()
-                            .collection("Users") // Ensure "Users" matches your Firestore collection name
-                            .document(userId) // Current user's document
-                            .collection("vehicles") // Vehicles subcollection
-                            .document(vehicleToDelete.id) // Use the vehicle's unique ID
-                            .delete()
-                            .addOnSuccessListener {
-                                vehicles.removeAt(position) // Remove from local list
-                                notifyDataSetChanged() // Update UI
-                                Toast.makeText(context, "Vehicle Successfully Deleted", Toast.LENGTH_SHORT).show()
-                            }
-                            .addOnFailureListener { e ->
-                                Toast.makeText(context, "Error deleting vehicle: ${e.message}", Toast.LENGTH_LONG).show()
-                            }
-                    } else {
-                        Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
-                    }
+                maintenanceButton.setOnClickListener {
+                    onMaintenanceClicked(vehicle)
                 }
-                .setNegativeButton("No", null)
-                .show()
+            } else {
+                maintenanceButton.visibility = View.GONE
+                editButton.visibility = View.VISIBLE
+                deleteButton.visibility = View.VISIBLE
 
+                editButton.setOnClickListener {
+                    val intent = Intent(context, AddVehicleActivity::class.java).apply {
+                        putExtra("VEHICLE_DOC_ID", vehicle.id)
+                        putExtra("BRAND", vehicle.brand)
+                        putExtra("MODEL", vehicle.model)
+                        putExtra("YEAR", vehicle.year)
+                        putExtra("MILEAGE", vehicle.mileage)
+                        putExtra("VIN", vehicle.vin)
+                    }
+                    context.startActivity(intent)
+                }
+
+                deleteButton.setOnClickListener {
+                    // Handle delete logic here
+                }
+            }
         }
+    }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VehicleViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.list_item_vehicle, parent, false)
+        return VehicleViewHolder(view)
+    }
 
-        return rowView
+    override fun onBindViewHolder(holder: VehicleViewHolder, position: Int) {
+        holder.bind(vehicles[position])
+    }
+
+    override fun getItemCount(): Int = vehicles.size
+
+    fun updateData(newVehicles: List<Vehicle>) {
+        vehicles.clear()
+        vehicles.addAll(newVehicles)
+        notifyDataSetChanged()
     }
 }

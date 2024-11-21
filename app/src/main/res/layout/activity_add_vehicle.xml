@@ -42,6 +42,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <EditText
+        android:id="@+id/editTextMileage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Vehicle Mileage"
+        android:inputType="number"
+        android:layout_marginTop="16dp" />
+
+
     <!-- Vehicle VIN EditText -->
     <EditText
         android:id="@+id/editTextVin"

@@ -26,11 +26,12 @@ class AddVehicleActivity : AppCompatActivity() {
         val editTextVehicleModel = findViewById<EditText>(R.id.editTextVehicleModel)
         val editTextVehicleYear = findViewById<EditText>(R.id.editTextVehicleYear)
         val editTextVin = findViewById<EditText>(R.id.editTextVin)
-        val buttonAddVehicle = findViewById<Button>(R.id.buttonAddVehicle)
+        val editTextMileage = findViewById<EditText>(R.id.editTextMileage) // New Mileage Field
+        val buttonSaveVehicle = findViewById<Button>(R.id.buttonAddVehicle)
         val buttonBack = findViewById<Button>(R.id.buttonBack)
 
         // Check if we're editing an existing vehicle
-        vehicleDocumentId = intent.getStringExtra("VEHICLE_DOC_ID") // Firestore document ID
+        vehicleDocumentId = intent.getStringExtra("VEHICLE_DOC_ID")
         val isEditing = vehicleDocumentId != null
 
         if (isEditing) {
@@ -39,62 +40,70 @@ class AddVehicleActivity : AppCompatActivity() {
             editTextVehicleModel.setText(intent.getStringExtra("MODEL"))
             editTextVehicleYear.setText(intent.getStringExtra("YEAR"))
             editTextVin.setText(intent.getStringExtra("VIN"))
+            editTextMileage.setText(intent.getIntExtra("MILEAGE", 0).toString())
 
-            buttonAddVehicle.text = "Update Vehicle"
+            buttonSaveVehicle.text = "Update Vehicle"
         }
 
         // Save or update vehicle
-        buttonAddVehicle.setOnClickListener {
+        buttonSaveVehicle.setOnClickListener {
             val vehicleBrand = editTextVehicleBrand.text.toString().trim()
             val vehicleModel = editTextVehicleModel.text.toString().trim()
             val vehicleYear = editTextVehicleYear.text.toString().trim()
             val vin = editTextVin.text.toString().trim()
+            val mileageText = editTextMileage.text.toString().trim()
 
-            if (vehicleBrand.isNotEmpty() && vehicleModel.isNotEmpty() && vehicleYear.isNotEmpty()) {
-                val userId = auth.currentUser?.uid
-                if (userId != null) {
-                    val vehicle = Vehicle(
-                        id = vehicleDocumentId ?: "", // For new vehicles, ID will be generated
-                        brand = vehicleBrand,
-                        model = vehicleModel,
-                        year = vehicleYear,
-                        vin = if (vin.isNotEmpty()) vin else null
-                    )
+            // Validate input
+            if (vehicleBrand.isEmpty() || vehicleModel.isEmpty() || vehicleYear.isEmpty() || mileageText.isEmpty()) {
+                Toast.makeText(this, "All fields, including mileage, are required.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-                    if (isEditing) {
-                        // Update an existing vehicle
-                        vehicleDocumentId?.let { docId ->
-                            firestore.collection("Users").document(userId)
-                                .collection("vehicles").document(docId)
-                                .set(vehicle.toMap())
-                                .addOnSuccessListener {
-                                    Toast.makeText(this, "Vehicle updated!", Toast.LENGTH_SHORT).show()
-                                    finish()
-                                }
-                                .addOnFailureListener { e ->
-                                    Toast.makeText(this, "Failed to update vehicle: ${e.message}", Toast.LENGTH_SHORT).show()
-                                }
-                        } ?: run {
-                            Toast.makeText(this, "Document ID is null, cannot update vehicle", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        // Add a new vehicle
+            val mileage = mileageText.toIntOrNull()
+            if (mileage == null || mileage <= 0) {
+                Toast.makeText(this, "Please enter a valid mileage.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+                val vehicle = mapOf(
+                    "brand" to vehicleBrand,
+                    "model" to vehicleModel,
+                    "year" to vehicleYear,
+                    "vin" to if (vin.isNotEmpty()) vin else null,
+                    "mileage" to mileage
+                )
+
+                if (isEditing) {
+                    // Update an existing vehicle
+                    vehicleDocumentId?.let { docId ->
                         firestore.collection("Users").document(userId)
-                            .collection("vehicles")
-                            .add(vehicle.toMap())
+                            .collection("vehicles").document(docId)
+                            .update(vehicle)
                             .addOnSuccessListener {
-                                Toast.makeText(this, "Vehicle added!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Vehicle updated!", Toast.LENGTH_SHORT).show()
                                 finish()
                             }
                             .addOnFailureListener { e ->
-                                Toast.makeText(this, "Failed to add vehicle: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Failed to update vehicle: ${e.message}", Toast.LENGTH_SHORT).show()
                             }
                     }
                 } else {
-                    Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+                    // Add a new vehicle
+                    firestore.collection("Users").document(userId)
+                        .collection("vehicles")
+                        .add(vehicle)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Vehicle added!", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Failed to add vehicle: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
                 }
             } else {
-                Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
             }
         }
 

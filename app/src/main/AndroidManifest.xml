@@ -42,5 +42,6 @@
 
         <!-- Receiver -->
         <receiver android:name=".ReminderReceiver" />
+        <activity android:name=".RemindersActivity"/>
     </application>
 </manifest>

@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class VehicleAdapter(
     private val context: Context,
@@ -52,8 +55,32 @@ class VehicleAdapter(
                 }
 
                 deleteButton.setOnClickListener {
-                    // Handle delete logic here
+                    // Call delete function for this vehicle
+                    deleteVehicle(vehicle)
                 }
+            }
+        }
+
+        private fun deleteVehicle(vehicle: Vehicle) {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            if (userId != null) {
+                FirebaseFirestore.getInstance()
+                    .collection("Users")
+                    .document(userId)
+                    .collection("vehicles")
+                    .document(vehicle.id)
+                    .delete()
+                    .addOnSuccessListener {
+                        // Remove vehicle from the list and update adapter
+                        vehicles.remove(vehicle)
+                        notifyItemRemoved(adapterPosition)
+                        Toast.makeText(context, "Vehicle deleted!", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "Failed to delete vehicle: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -48,6 +48,7 @@ class MaintenanceDetailsActivity : AppCompatActivity() {
         setReminderButton.setOnClickListener {
             showReminder(vehicleBrand, vehicleModel)
         }
+
     }
 
     private fun fetchMaintenanceInfo(

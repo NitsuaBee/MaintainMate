@@ -61,14 +61,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
+
     <Button
         android:id="@+id/viewRemindersButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Reminders"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
-        />
+        app:layout_constraintTop_toBottomOf="@id/buttonMaintenance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

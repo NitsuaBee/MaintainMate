@@ -2,6 +2,7 @@ package com.example.maintainmate
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,14 +34,24 @@ class ViewVehiclesActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Initialize VehicleAdapter for View Vehicles (not maintenance mode)
-        vehicleAdapter = VehicleAdapter(this, mutableListOf(), isMaintenanceMode = false) { vehicle ->
-            // You can implement any action when a vehicle is clicked
-            Log.d(TAG, "Clicked on: ${vehicle.brand} ${vehicle.model}")
-        }
+        vehicleAdapter = VehicleAdapter(
+            this,
+            mutableListOf(),
+            isMaintenanceMode = false,
+            onMaintenanceClicked = { vehicle ->
+                // Handle maintenance click action here
+                Log.d(TAG, "Maintenance clicked for: ${vehicle.brand} ${vehicle.model}")
+            }
+        )
         recyclerView.adapter = vehicleAdapter
 
         // Fetch vehicles from Firestore
         fetchVehicles()
+
+        val backButton = findViewById<Button>(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
+        }
     }
 
     private fun fetchVehicles() {
